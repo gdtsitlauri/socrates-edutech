@@ -1,0 +1,4 @@
+seed,backend,endpoint,status,detail,p50_ms,p95_ms,throughput_rps
+7,csharp,/students/1/progress,measured,,2.96,44.585,53.64
+11,csharp,/students/1/learning_path,measured,,60.447,62.205,16.15
+19,php,/courses/1/catalog,measured,,0.522,0.632,1834.91

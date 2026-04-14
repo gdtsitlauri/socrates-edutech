@@ -1,0 +1,91 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath}
+\usepackage{url}
+
+\title{SOCRATES: A Multi-Language Educational Research Framework with DIALECTIC Causal Learning Path Optimization}
+
+\author{
+\IEEEauthorblockN{SOCRATES Project}
+\IEEEauthorblockA{System for Online Collaborative Research, Adaptive Teaching, and Educational Science}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper presents SOCRATES, a cross-language educational technology framework spanning web systems, mobile learning, content processing, and legacy scientific computing. The central contribution is SOCRATES-DIALECTIC, a causal learning-path optimizer that combines Bayesian Knowledge Tracing, instrumented causal gap estimation on synthetic interventions, dependency-aware ordering, item response theory, and spaced repetition. In the checked-in reproducible artifact, DIALECTIC attains average target mastery 0.7466 while reducing the mean steps to mastery from 7.0 under a fixed curriculum to 6.0, improving learning efficiency from 0.1067 to 0.1244. The same artifact now executes the full multi-language verification path in user space: the .NET and PHP services emit measured API latencies, the Swift and Kotlin modules pass executable tests, the Ruby and Perl pipelines pass their language-native suites, and the Fortran bridge compiles through \texttt{f2py} with measured numerical benchmarks. These results position SOCRATES as a runnable end-to-end research framework rather than a static scaffold.
+\end{abstract}
+
+\begin{IEEEkeywords}
+educational data mining, intelligent tutoring systems, causal learning analytics, Bayesian Knowledge Tracing, item response theory, spaced repetition
+\end{IEEEkeywords}
+
+\section{Introduction}
+Most educational AI systems react to observed performance rather than modeling the causal reasons behind failure. Recommendation engines typically infer that low performance on topic $X$ implies more practice on topic $X$, even when the true bottleneck is an unmastered prerequisite $Y$. SOCRATES addresses this gap with a research framework built around the SOCRATES-DIALECTIC algorithm, which explicitly estimates causal learning gaps and converts them into adaptive study plans.
+
+The repository is intentionally multi-language. C\# and PHP support interoperable backend services, Swift and Kotlin host mobile learning logic, Ruby and Perl support analytics and content extraction, Fortran implements numerical kernels for educational computing, and Python orchestrates the core AI components. The current artifact snapshot is fully reproducible in the provided workspace through local toolchains under \texttt{.tooling/}, and all numeric claims reported here correspond to regenerated CSV files.
+
+\section{Educational Platform Architecture (C\#, PHP)}
+The backend layer contains two complementary services. The .NET 8 API exposes authenticated endpoints for student progress, answer submission, recommendations, and learning paths, backed by SQLite through Entity Framework and augmented with SignalR for live quiz updates. The PHP LMS service offers lightweight course catalog, enrollment, gradebook, and progress-sync endpoints that follow the same student-progress schema. The learning-path endpoint delegates to the shared Python DIALECTIC CLI so that the causal recommendation logic is centralized rather than reimplemented per runtime.
+
+The checked-in benchmark harness launches both services and measures route latency and SQLite access. In the current verified run, the C\# \texttt{/students/1/progress} endpoint achieved 2.96 ms $p50$ latency, the C\# \texttt{/students/1/learning\_path} endpoint achieved 60.45 ms $p50$ latency, and the PHP \texttt{/courses/1/catalog} endpoint achieved 0.52 ms $p50$ latency. Across the three recorded rows, the mean throughput is 634.9 requests/s. The SQLite benchmark rows remain below 0.005 ms for the sampled read operations in \texttt{results/backend/database\_benchmarks.csv}.
+
+\section{Mobile Learning (Swift, Kotlin)}
+The Swift package implements a knowledge-graph-aware learning engine with SM-2 spaced repetition scheduling and schema-compatible progress decoding, while the Kotlin engine provides adaptive quiz selection based on the two-parameter logistic IRT model
+\begin{equation}
+P(\text{correct}\mid \theta, b, a)=\frac{1}{1+\exp(-a(\theta-b))}.
+\end{equation}
+
+Both mobile code paths are executable in the artifact. The Swift package passes three tests covering spaced repetition, graph ordering, and shared-schema decoding. The Kotlin module passes a runnable JVM test runner covering adaptive difficulty, ability updates, and asynchronous question loading. The shared mobile experiments regenerate mean day-7 retention 0.8368, mean day-30 retention 0.8336, mean reviews per week 4.2, learner-ability RMSE 0.5812, item-difficulty RMSE 0.2178, and mean probability error 0.0432.
+
+\section{Content Processing (Perl, Ruby)}
+Educational materials are processed with a Perl extraction engine and a Ruby content pipeline. The Perl script parses Markdown, LaTeX, and HTML expressions to recover terms, definitions, and formulas, and then converts these into flashcards and machine-readable outputs for indexing and answer matching. The Ruby pipeline performs Markdown-to-HTML transformation, table-of-contents generation, link extraction, and readability analysis, and emits syntax-highlighting-ready code blocks for fenced code sections. Both code paths now have executable test suites: \texttt{Test::More} for Perl and \texttt{RSpec} for Ruby.
+
+The checked-in content experiment uses three fixture documents covering Markdown, LaTeX, and HTML. Across these fixtures, the mean key-term $F_1$ is 0.6048, mean formula $F_1$ is 1.0000, and mean definition $F_1$ is 0.9167. Readability analysis across the same documents yields mean Flesch-Kincaid 38.15, mean Gunning Fog 12.24, and mean prerequisite-gap score 0.07.
+
+\section{Legacy Scientific Computing (Fortran)}
+SOCRATES includes a Fortran math library for matrix multiplication, Gaussian elimination, LU decomposition, QR-style eigenvalue iteration, Simpson integration, Gauss-Legendre integration, Runge-Kutta integration, Newton-Raphson root finding, and bisection. The library is structured for \texttt{f2py} interoperation so numerical routines can be called directly from Python.
+
+The current artifact compiles the bridge through the Meson-backed \texttt{f2py} path and emits measured benchmark rows. The results are intentionally mixed rather than curated: matrix multiplication at the chosen benchmark size completed in 3.61 ms in Fortran versus 1349.19 ms in pure Python and 0.57 ms in NumPy; the ODE benchmark completed in 1.96 ms in Fortran versus 3.18 ms in pure Python and 0.26 ms in NumPy; the eigenvalue benchmark completed in 5.66 ms in the Fortran path versus 0.27 ms in the simple Python baseline and 5.24 ms in NumPy. These results show that the legacy bridge is now executable and measurable, while also illustrating that performance depends strongly on the selected numerical task and wrapper overhead.
+
+\section{SOCRATES-DIALECTIC Algorithm}
+SOCRATES-DIALECTIC models a learner as a distribution over concept mastery states defined on a prerequisite graph. For each concept $c_i$, the system maintains $P(\text{know } c_i)\in[0,1]$ and updates it with Bayesian Knowledge Tracing:
+\begin{equation}
+P(K_t \mid \text{correct}) = \frac{P(K_t)(1-P(\text{slip}))}{P(K_t)(1-P(\text{slip})) + (1-P(K_t))P(\text{guess})}.
+\end{equation}
+After inference, the model applies a learning transition with probability $P(\text{learn})$.
+
+The causal stage uses synthetic randomized encouragement as an instrument over prerequisite practice. For each candidate concept, the system simulates encouraged and control practice exposure, estimates the first-stage effect of the instrument on prerequisite engagement, measures the reduced-form effect on target mastery, and applies a Wald-style ratio to estimate the causal benefit of strengthening that prerequisite. The optimizer then combines that causal effect with graph structure and estimated study time to prioritize the learning path.
+
+The implemented pipeline is:
+\begin{enumerate}
+\item estimate current mastery with Bayesian Knowledge Tracing;
+\item infer causal prerequisite gaps with instrumented synthetic interventions;
+\item compute a dependency-respecting ordering over the prerequisite closure;
+\item assign question difficulty using IRT-calibrated learner ability;
+\item schedule review with SM-2 for long-term retention.
+\end{enumerate}
+
+\section{Experiments}
+All reported experiments use the checked-in runners and three seeds (7, 11, and 19). The DIALECTIC evaluation uses a synthetic cohort of 1{,}000 students. DIALECTIC achieves average target mastery 0.7466, compared with 0.7467 for the fixed curriculum and 0.7056 for random ordering. The important difference is time efficiency: DIALECTIC requires 6.0 average steps to reach the target path, while the fixed curriculum requires 7.0 steps and random ordering requires 6.798 steps. This yields mean learning-efficiency 0.1244 for DIALECTIC versus 0.1067 for the fixed curriculum and 0.1038 for random ordering, a 16.6\% efficiency gain relative to the fixed baseline while preserving end mastery.
+
+The broader experimental picture now covers every module in executable form: backend latencies, SQLite access, mobile retention, IRT calibration, content extraction, readability analysis, Fortran numerical benchmarking, and DIALECTIC learning efficiency. This is important for the research artifact claim because the repository no longer depends on placeholder CSV rows to describe its behavior.
+
+\section{Conclusion}
+SOCRATES demonstrates a practical research architecture for studying educational adaptation across modern web backends, mobile clients, content pipelines, and legacy numerical code. The strongest current result remains that causal path optimization can reduce instructional steps without sacrificing mastery, but the more important repository-level outcome is that the complete stack now executes end to end inside the verified workspace. Future work should replace the synthetic encouragement model with classroom telemetry, refine the numerical benchmarking methodology for the legacy bridge, and expand the causal layer with stronger structural assumptions.
+
+\begin{thebibliography}{00}
+\bibitem{corbett1994}
+A. Corbett and J. Anderson, ``Knowledge tracing: Modeling the acquisition of procedural knowledge,'' \emph{User Modeling and User-Adapted Interaction}, vol. 4, no. 4, pp. 253--278, 1994.
+
+\bibitem{embretson2000}
+S. Embretson and S. Reise, \emph{Item Response Theory for Psychologists}. Mahwah, NJ, USA: Lawrence Erlbaum, 2000.
+
+\bibitem{wozniak1990}
+P. Wozniak, E. Gorzelanczyk, and J. Murakowski, ``Two components of long-term memory,'' \emph{Acta Neurobiologiae Experimentalis}, vol. 55, no. 1, pp. 59--65, 1995.
+
+\bibitem{pearl2009}
+J. Pearl, \emph{Causality}. 2nd ed. Cambridge, UK: Cambridge University Press, 2009.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,4 @@
+seed,task,status,detail,fortran_ms,python_ms,numpy_ms,speedup_vs_python
+7,matrix_multiply_1000,measured,,3.614,1349.192,0.566,373.304
+11,ode_solver_10000,measured,,1.958,3.178,0.262,1.623
+19,eigenvalue_500,measured,,5.658,0.274,5.239,0.048

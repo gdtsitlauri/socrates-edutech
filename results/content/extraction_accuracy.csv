@@ -1,0 +1,4 @@
+seed,format,key_term_f1,formula_f1,definition_f1
+7,markdown,0.3478,1.0,0.75
+11,latex,0.6667,1.0,1.0
+19,html,0.8,1.0,1.0

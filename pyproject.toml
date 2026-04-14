@@ -1,0 +1,12 @@
+[project]
+name = "socrates-edutech"
+version = "0.1.0"
+description = "SOCRATES research framework and SOCRATES-DIALECTIC core"
+requires-python = ">=3.12"
+
+[project.scripts]
+socrates-dialectic = "socrates_dialectic.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q -p no:cacheprovider"
