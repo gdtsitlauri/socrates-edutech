@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socrates-edutech.local/schemas/student_progress.schema.json",
+  "title": "StudentProgressSnapshot",
+  "type": "object",
+  "required": [
+    "student_id",
+    "course_id",
+    "learning_style",
+    "concept_mastery",
+    "recent_scores",
+    "upcoming_reviews",
+    "updated_at"
+  ],
+  "properties": {
+    "student_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "course_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "learning_style": {
+      "type": "string"
+    },
+    "concept_mastery": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 1.0
+      }
+    },
+    "recent_scores": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 100.0
+      }
+    },
+    "upcoming_reviews": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["concept_id", "due_on", "interval_days", "ease_factor"],
+        "properties": {
+          "concept_id": {
+            "type": "string"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "interval_days": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "ease_factor": {
+            "type": "number",
+            "minimum": 1.3
+          }
+        }
+      }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

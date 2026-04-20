@@ -1,0 +1,4 @@
+seed,document,flesch_kincaid,gunning_fog,prerequisite_gap_score
+7,linear_equations,33.39,14.02,0.19
+11,runge_kutta,43.55,12.77,0.02
+19,gradient_descent,37.5,9.94,0.0

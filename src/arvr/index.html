@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOCRATES AR — Interactive CS Quiz</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0a1a;
+      color: #e0e0ff;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #canvas-container {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* AR overlay (shown inside the AR session) */
+    #ar-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px;
+    }
+
+    #status {
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-size: 14px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      backdrop-filter: blur(6px);
+      margin-bottom: 12px;
+      pointer-events: none;
+    }
+
+    /* UI panel (shown before AR starts) */
+    #ui-panel {
+      position: relative;
+      z-index: 20;
+      text-align: center;
+      max-width: 480px;
+      padding: 40px 32px;
+      background: rgba(16, 16, 48, 0.88);
+      border: 1px solid rgba(100, 100, 255, 0.3);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 40px rgba(0, 0, 80, 0.5);
+    }
+
+    h1 {
+      font-size: 2rem;
+      letter-spacing: 0.12em;
+      color: #a0c4ff;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #8888bb;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn:active { transform: scale(0.96); }
+
+    #start-btn {
+      background: linear-gradient(135deg, #1565c0, #0288d1);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(2, 136, 209, 0.4);
+      margin-right: 10px;
+    }
+
+    #stop-btn {
+      background: rgba(255,255,255,0.08);
+      color: #aaa;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .info {
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: #666699;
+      line-height: 1.6;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(0, 200, 130, 0.15);
+      color: #00c882;
+      border: 1px solid rgba(0, 200, 130, 0.35);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Three.js canvas -->
+  <div id="canvas-container">
+    <canvas id="three-canvas"></canvas>
+  </div>
+
+  <!-- AR overlay (injected as domOverlay root) -->
+  <div id="ar-overlay">
+    <div id="status">Initialising…</div>
+  </div>
+
+  <!-- Landing UI -->
+  <div id="ui-panel">
+    <div class="badge">WebXR + Three.js</div>
+    <h1>SOCRATES AR</h1>
+    <p class="subtitle">Augmented Reality Computer Science Quiz Cards</p>
+
+    <button class="btn" id="start-btn">Launch AR</button>
+    <button class="btn" id="stop-btn">Stop</button>
+
+    <div class="info">
+      Requires a WebXR-capable device (Android + Chrome recommended).<br>
+      Desktop fallback: click canvas to place cards without AR.
+    </div>
+  </div>
+
+  <script type="module">
+    import { init, startAR, stopAR } from './ar_scene.js';
+
+    const canvas = document.getElementById('three-canvas');
+    init(canvas);
+
+    document.getElementById('start-btn').addEventListener('click', () => {
+      document.getElementById('ui-panel').style.display = 'none';
+      startAR();
+    });
+
+    document.getElementById('stop-btn').addEventListener('click', () => {
+      stopAR();
+      document.getElementById('ui-panel').style.display = '';
+      document.getElementById('start-btn').textContent = 'Launch AR';
+      document.getElementById('status').textContent = 'Session ended.';
+    });
+  </script>
+</body>
+</html>

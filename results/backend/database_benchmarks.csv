@@ -1,0 +1,4 @@
+seed,operation,db_engine,records,latency_ms,status,detail
+7,student_progress_query,sqlite,1,0.004,measured,
+11,leaderboard_update,sqlite,0.32,0.004,measured,
+19,assessment_ingest,sqlite,2,0.004,measured,

@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socrates-edutech.local/schemas/learning_path.schema.json",
+  "title": "DialecticLearningPath",
+  "type": "object",
+  "required": [
+    "student_id",
+    "target_concepts",
+    "causal_gaps",
+    "ordered_steps",
+    "estimated_gain_per_hour",
+    "generated_at"
+  ],
+  "properties": {
+    "student_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "target_concepts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "causal_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "concept_id",
+          "title",
+          "reason",
+          "causal_effect",
+          "instrument_strength",
+          "mastery"
+        ],
+        "properties": {
+          "concept_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "causal_effect": {
+            "type": "number"
+          },
+          "instrument_strength": {
+            "type": "number"
+          },
+          "mastery": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          }
+        }
+      }
+    },
+    "ordered_steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "concept_id",
+          "title",
+          "priority",
+          "causal_reason",
+          "recommended_difficulty",
+          "estimated_minutes",
+          "causal_effect",
+          "instrument_strength",
+          "mastery"
+        ],
+        "properties": {
+          "concept_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "number"
+          },
+          "causal_reason": {
+            "type": "string"
+          },
+          "recommended_difficulty": {
+            "type": "string",
+            "enum": ["foundational", "core", "stretch"]
+          },
+          "estimated_minutes": {
+            "type": "number",
+            "minimum": 1
+          },
+          "causal_effect": {
+            "type": "number"
+          },
+          "instrument_strength": {
+            "type": "number"
+          },
+          "mastery": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          }
+        }
+      }
+    },
+    "estimated_gain_per_hour": {
+      "type": "number"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
