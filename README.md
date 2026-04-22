@@ -1,9 +1,5 @@
 # SOCRATES
 
-**Author:** George David Tsitlauri  
-**Affiliation:** Dept. of Informatics & Telecommunications, University of Thessaly, Greece  
-**Contact:** gdtsitlauri@gmail.com  
-**Year:** 2026
 
 System for Online Collaborative Research, Adaptive Teaching, and Educational Science.
 
@@ -17,6 +13,16 @@ SOCRATES is a multi-language educational research framework spanning:
 
 The central contribution is `SOCRATES-DIALECTIC`: a causal learning-path engine
 that models why a learner struggles, not only what they score.
+
+
+## Project Metadata
+
+| Field | Value |
+| --- | --- |
+| Author | George David Tsitlauri |
+| Affiliation | Dept. of Informatics & Telecommunications, University of Thessaly, Greece |
+| Contact | gdtsitlauri@gmail.com |
+| Year | 2026 |
 
 ## DIALECTIC Pipeline
 
@@ -157,14 +163,4 @@ Current regenerated highlights:
 - Verified here: Python, Perl, PHP, Ruby, Swift, Kotlin, .NET, SQLite, `gfortran`, `f2py`, the DIALECTIC CLI, the repo-wide strict check runner, and full result regeneration.
 - User-space toolchains were installed under `.tooling/` for this environment.
 
-## Citation
 
-```bibtex
-@misc{tsitlauri2026socrates,
-  author = {George David Tsitlauri},
-  title  = {SOCRATES: A Multi-Language Educational Research Framework with DIALECTIC Causal Learning Path Optimization},
-  year   = {2026},
-  institution = {University of Thessaly},
-  email  = {gdtsitlauri@gmail.com}
-}
-```
